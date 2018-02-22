@@ -16,10 +16,9 @@ class MoviesController < ApplicationController
     puts "Inside Index"
     @movies = Movie.all
 
-      if (params[:order] == 'sort_by_name')
+      if (params[:sort] == 'sort_by_name')
         @movies = @movies.sort_by {|movie| movie.title}
-        puts params[:title_header]
-      elsif (params[:order] == 'sort_by_release_date')
+      elsif (params[:sort] == 'sort_by_release_date')
         @movies = @movies.sort_by {|movie| movie.release_date}
       end
     #basket.sort_by { |f| [-f.calories, f.name] }
