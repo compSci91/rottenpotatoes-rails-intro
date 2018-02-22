@@ -16,3 +16,6 @@
 !/log/.keep
 /tmp
 log
+
+heroku_rsa
+heroku_rsa.pub

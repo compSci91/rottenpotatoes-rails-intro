@@ -18,6 +18,7 @@ class MoviesController < ApplicationController
 
       if (params[:order] == 'sort_by_name')
         @movies = @movies.sort_by {|movie| movie.title}
+        puts params[:title_header]
       elsif (params[:order] == 'sort_by_release_date')
         @movies = @movies.sort_by {|movie| movie.release_date}
       end
