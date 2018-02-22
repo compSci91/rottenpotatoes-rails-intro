@@ -4,9 +4,9 @@
 %table#movies
   %thead
     %tr
-      %th#title_header{params[:order] == "sort_by_name" ? {:class => "hilite"} : {}}= link_to "Movie Title", :sort => 'sort_by_name'
+      %th#title_header{params[:sort] == "sort_by_name" ? {:class => "hilite"} : {}}= link_to "Movie Title", :sort => 'sort_by_name'
       %th Rating
-      %th#release_date_header{params[:order] == "sort_by_release_date" ? {:class => "hilite"} : {}}= link_to "Release Date", :sort => 'sort_by_release_date'
+      %th#release_date_header{params[:sort] == "sort_by_release_date" ? {:class => "hilite"} : {}}= link_to "Release Date", :sort => 'sort_by_release_date'
       %th More Info
   %tbody
     - @movies.each do |movie|
