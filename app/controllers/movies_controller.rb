@@ -23,7 +23,18 @@ class MoviesController < ApplicationController
       end
 
       @all_ratings = Movie.getMovieRatings
-    #basket.sort_by { |f| [-f.calories, f.name] }
+
+      if (params[:ratings] != nil)
+        puts "MOvie is not null!"
+        @movies = []
+        params[:ratings].keys.each do |checked_rating|
+          _foundMovies = Movie.where(rating: checked_rating)
+          puts _foundMovies
+          @movies.concat _foundMovies
+          puts @movies
+        end
+      end
+
   end
 
 
