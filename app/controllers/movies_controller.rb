@@ -16,10 +16,23 @@ class MoviesController < ApplicationController
     puts "Inside Index"
     @movies = Movie.all
 
+    #default to using params, but assign the value to session
       if (params[:sort] == 'sort_by_name')
         @movies = @movies.sort_by {|movie| movie.title}
+        session[:sort] = 'sort_by_name'
       elsif (params[:sort] == 'sort_by_release_date')
         @movies = @movies.sort_by {|movie| movie.release_date}
+        session[:sort] = 'sort_by_release_date'
+      elsif (params[:sort] == nil) #if no params are passed in, use what is in the session
+        puts "Parms is nil!!!!"
+        puts session[:sort]
+        if (session[:sort] == 'sort_by_name')
+          puts "Sorting by name!!!!"
+          @movies = @movies.sort_by {|movie| movie.title}
+        elsif (session[:sort] == 'sort_by_release_date')
+          @movies = @movies.sort_by {|movie| movie.release_date}
+          session[:sort] == 'sort_by_release_date'
+        end
       end
 
       @all_ratings = Movie.getMovieRatings
