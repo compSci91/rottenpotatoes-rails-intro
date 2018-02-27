@@ -16,6 +16,26 @@ class MoviesController < ApplicationController
     puts "Inside Index"
     @movies = Movie.all
 
+    if (params[:ratings] != nil)
+      session[:ratings] = params[:ratings]
+      @movies = []
+      params[:ratings].keys.each do |checked_rating|
+        _foundMovies = Movie.where(rating: checked_rating)
+        puts _foundMovies
+        @movies.concat _foundMovies
+        puts @movies
+      end
+
+    elsif(session[:ratings] != nil)
+      @movies = []
+      session[:ratings].keys.each do |checked_rating|
+        _foundMovies = Movie.where(rating: checked_rating)
+        puts _foundMovies
+        @movies.concat _foundMovies
+        puts @movies
+      end
+
+    end
     #default to using params, but assign the value to session
       if (params[:sort] == 'sort_by_name')
         @movies = @movies.sort_by {|movie| movie.title}
@@ -25,7 +45,6 @@ class MoviesController < ApplicationController
         session[:sort] = 'sort_by_release_date'
       elsif (params[:sort] == nil) #if no params are passed in, use what is in the session
         if (session[:sort] == 'sort_by_name')
-          puts "Sorting by name!!!!"
           @movies = @movies.sort_by {|movie| movie.title}
         elsif (session[:sort] == 'sort_by_release_date')
           @movies = @movies.sort_by {|movie| movie.release_date}
@@ -35,26 +54,7 @@ class MoviesController < ApplicationController
 
       @all_ratings = Movie.getMovieRatings
 
-      if (params[:ratings] != nil)
-        session[:ratings] = params[:ratings]
-        @movies = []
-        params[:ratings].keys.each do |checked_rating|
-          _foundMovies = Movie.where(rating: checked_rating)
-          puts _foundMovies
-          @movies.concat _foundMovies
-          puts @movies
-        end
 
-      elsif(session[:ratings] != nil)
-        @movies = []
-        session[:ratings].keys.each do |checked_rating|
-          _foundMovies = Movie.where(rating: checked_rating)
-          puts _foundMovies
-          @movies.concat _foundMovies
-          puts @movies
-        end
-
-      end
 
   end
 
