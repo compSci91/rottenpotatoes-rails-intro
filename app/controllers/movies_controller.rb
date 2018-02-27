@@ -21,6 +21,8 @@ class MoviesController < ApplicationController
       elsif (params[:sort] == 'sort_by_release_date')
         @movies = @movies.sort_by {|movie| movie.release_date}
       end
+
+      @all_ratings = Movie.getMovieRatings
     #basket.sort_by { |f| [-f.calories, f.name] }
   end
 
