@@ -15,47 +15,77 @@ class MoviesController < ApplicationController
   def index
     puts "Inside Index"
     @movies = Movie.all
+    @all_ratings = Movie.getMovieRatings
+
+
+    newParams = Hash.new
+    needToRedirect = false
 
     if (params[:ratings] != nil)
-      session[:ratings] = params[:ratings]
-      @movies = []
-      params[:ratings].keys.each do |checked_rating|
-        _foundMovies = Movie.where(rating: checked_rating)
-        puts _foundMovies
-        @movies.concat _foundMovies
-        puts @movies
-      end
+          session[:ratings] = params[:ratings]
+          @movies = []
+          params[:ratings].keys.each do |checked_rating|
+            _foundMovies = Movie.where(rating: checked_rating)
+            puts _foundMovies
+            @movies.concat _foundMovies
+            puts @movies
+          end
 
-    elsif(session[:ratings] != nil)
-      @movies = []
-      session[:ratings].keys.each do |checked_rating|
-        _foundMovies = Movie.where(rating: checked_rating)
-        puts _foundMovies
-        @movies.concat _foundMovies
-        puts @movies
-      end
+    elsif(params[:ratings] == nil && session[:ratings] != nil) #params was nil
+          needToRedirect = true
+          newParams[:ratings] = session[:ratings]
 
+          @movies = []
+          session[:ratings].keys.each do |checked_rating|
+            _foundMovies = Movie.where(rating: checked_rating)
+            puts _foundMovies
+            @movies.concat _foundMovies
+            puts @movies
+          end
+
+     elsif(params[:ratings] == nil && session[:ratings] == nil)
+         needToRedirect = true
+         newParams[:ratings] = {'G' => 1,'PG' => 1,'PG-13' => 1,'R' => 1}
     end
+
+
+
+
+
+
+
     #default to using params, but assign the value to session
       if (params[:sort] == 'sort_by_name')
-        @movies = @movies.sort_by {|movie| movie.title}
-        session[:sort] = 'sort_by_name'
+              @movies = @movies.sort_by {|movie| movie.title}
+              session[:sort] = 'sort_by_name'
+              newParams[:sort] = 'sort_by_name'
+
       elsif (params[:sort] == 'sort_by_release_date')
-        @movies = @movies.sort_by {|movie| movie.release_date}
-        session[:sort] = 'sort_by_release_date'
+              @movies = @movies.sort_by {|movie| movie.release_date}
+              session[:sort] = 'sort_by_release_date'
+              newParams[:sort] = 'sort_by_release_date'
+
       elsif (params[:sort] == nil) #if no params are passed in, use what is in the session
-        if (session[:sort] == 'sort_by_name')
-          @movies = @movies.sort_by {|movie| movie.title}
-        elsif (session[:sort] == 'sort_by_release_date')
-          @movies = @movies.sort_by {|movie| movie.release_date}
-          session[:sort] == 'sort_by_release_date'
-        end
+              needToRedirect = true
+
+              if (session[:sort] == 'sort_by_name')
+                    @movies = @movies.sort_by {|movie| movie.title}
+                    newParams[:sort] = 'sort_by_name'
+
+              elsif (session[:sort] == 'sort_by_release_date')
+                    @movies = @movies.sort_by {|movie| movie.release_date}
+                    session[:sort] == 'sort_by_release_date'
+                    newParams[:sort] = 'sort_by_release_date'
+
+              else
+                  newParams[:sort] = "no_sort"
+              end
       end
 
-      @all_ratings = Movie.getMovieRatings
 
-      #redirect_to action: "new", :hash1 => "hash1", :hash2 => "hash2"
-
+      if(needToRedirect)
+        redirect_to action: "index", :ratings => newParams[:ratings], :sort => newParams[:sort]
+      end
 
   end
 
