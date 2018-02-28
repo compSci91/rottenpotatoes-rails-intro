@@ -54,6 +54,7 @@ class MoviesController < ApplicationController
 
       @all_ratings = Movie.getMovieRatings
 
+      #redirect_to action: "new", :hash1 => "hash1", :hash2 => "hash2"
 
 
   end
