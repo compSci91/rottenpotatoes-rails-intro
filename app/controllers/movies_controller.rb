@@ -65,21 +65,35 @@ class MoviesController < ApplicationController
               session[:sort] = 'sort_by_release_date'
               newParams[:sort] = 'sort_by_release_date'
 
+      elsif (params[:sort] == 'no_sort')
+              session[:sort] = 'no_sort'
+              newParams[:sort] = 'no_sort'
+
       elsif (params[:sort] == nil) #if no params are passed in, use what is in the session
               needToRedirect = true
 
-              if (session[:sort] == 'sort_by_name')
+              puts "Here is what session[:sort]"
+              puts session[:sort]
+            if (session[:sort] == nil)
+                puts "There is no sort"
+                session[:sort] = "no_sort"
+                newParams[:sort] = "no_sort"
+
+            elsif (session[:sort] == 'sort_by_name')
                     @movies = @movies.sort_by {|movie| movie.title}
                     newParams[:sort] = 'sort_by_name'
 
-              elsif (session[:sort] == 'sort_by_release_date')
+            elsif (session[:sort] == 'sort_by_release_date')
                     @movies = @movies.sort_by {|movie| movie.release_date}
                     session[:sort] == 'sort_by_release_date'
                     newParams[:sort] = 'sort_by_release_date'
 
-              else
-                  newParams[:sort] = "no_sort"
-              end
+            elsif (session[:sort] == 'no_sort')
+                    session[:sort] = 'no_sort'
+                    newParams[:sort] = 'no_sort'
+            end
+
+
       end
 
 
